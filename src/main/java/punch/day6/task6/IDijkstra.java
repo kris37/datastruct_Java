@@ -63,7 +63,7 @@ public class IDijkstra {
             if(!visited.contains(poll.tag)){
                 visited.add(poll.tag);
                 for (IGraph.Vertex vertex : linked) {
-                    priorityQueue.add(new Node(vertex.getMark(),vertex.getWeight()));
+                    priorityQueue.add(new Node(vertex.getMark(),vertex.getWeight() + poll.dis));
                 }
             }
         }
