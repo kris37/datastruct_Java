@@ -20,7 +20,7 @@ public class Leetcode72_EditDistance {
 
     /**
      * min(cost(insert,replace,delete))
-     * memory 
+     * memory
      * 每个操作 复杂度 + 1
      * @param word1
      * @param word2
