@@ -62,13 +62,25 @@ public class IAVLTree {
     }
 
     /**
-     *  从 node 节点
+     *  from node to leaf node 重建所有子树的node size
      * @param node
+     * @return
      */
-    private void reComputeHeightFromtoRoot(Node node){
-
+    private int reBuildSize(Node node){
+        if(node == null ) return 0;
+        node.size = reBuildSize(node.left) + reBuildSize(node.right) +1;
+        return node.size;
     }
 
+    /**
+     *  from node to leaf node  重建所有子树高度
+     * @return
+     */
+    private int reBuildHeight(Node node){
+        if(node == null) return 0;
+        node.height = Math.max(reBuildHeight(node.left),reComputeHeight(node.right)) +1;
+        return node.height;
+    }
     /**
      * 左旋o                           r
      *                     o         /  \
@@ -111,7 +123,8 @@ public class IAVLTree {
     }
 
     public boolean isBalance(Node node){
-        return Math.abs(getHeight(node.left) - getHeight(node.right)) <= 1;
+
+        return node == null || Math.abs(getHeight(node.left) - getHeight(node.right)) <= 1;
     }
 
 
@@ -150,7 +163,7 @@ public class IAVLTree {
     }
 
     /**
-     *  todo
+     *
      * @param v
      */
     public void delete(int v) {
@@ -158,12 +171,87 @@ public class IAVLTree {
         this.root = delete(v,root);
     }
 
-    private Node delete(int v ,Node node){
+    /**
+     *  delete 如果 v 左右存在 null 则 返回不为null 的子节点 向上平衡重新计算height size 等
+     *   否则 根据 v.left.height v.right.height 找出树较高的节点 找到 node = if(node is left delete max(left) else delete min(right))
+     *   replace  v with node
+     *
+     * @param
+     * @param node
+     * @return
+     */
+    private Node delete(int key ,Node node){
+        if(node.key == key){
+            if(node.left == null || node.right == null){
 
-        //todo
-        return null;
+                Node cur = node.left == null ? node.right:node.left;
+                node.left = node.right = null;
+                node = cur;
+            }else {
+                node =  replaceWithLeftMax(node);
+            }
+        }else if(node.key > key){
+            node.left = delete(key,node.left);
+        }else{
+            node.right = delete(key,node.right);
+        }
+        if(node == null) return null;
+        if(!isBalance(node)){
+            // 旋转 is recompute
+            return getHeight(node.left) > getHeight(node.right)?
+                    rightRotate(node):leftRotate(node);
+        }
+        node.height = reComputeHeight(node);
+        node.size = reComputeSize(node);
+        return node;
     }
 
+    /**
+     *  remove a and replace by max(subtree(b))
+     *      a             e
+     *    /  \           / \
+     *   b    c     =>  b   c
+     *  / \  / \       /    /\
+     * d  e  f g      d    f  g
+     *
+     *
+     * @param node
+     * @return
+     */
+    private Node replaceWithLeftMax(Node node){
+        Node cur = node.left;
+        node.left = null;
+        if(cur.right == null){
+            // return cur;
+            cur.right = node.right;
+            cur.size = reComputeSize(cur);
+            cur.height = reComputeHeight(cur);
+            return cur;
+        }
+        Node subRoot = removeMMaxNode(cur);
+        subRoot.left = cur;
+        subRoot.right = node.right;
+        subRoot.size = reComputeSize(subRoot);
+        subRoot.height = reComputeHeight(subRoot);
+        return subRoot;
+    }
+    // 不会出现 node = null 的情况
+    private Node removeMMaxNode(Node node){
+        Node subRoot = node;
+      if( node.right.right == null){
+            subRoot = node.right;
+            node.right = null;
+        }else{
+            subRoot =  removeMMaxNode(node.right);
+        }
+        node.size = reComputeSize(node);
+        node.height = reComputeSize(node);
+        return subRoot;
+    }
+    private Node replaceWithRightMin(Node node){
+
+        return null;
+    }
 
     public Object search(int v) {
         Node cur = root;
@@ -173,7 +261,6 @@ public class IAVLTree {
         }
         return null;
     }
-
 
     public static void main(String [] args){
 
