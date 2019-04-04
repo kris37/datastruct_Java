@@ -11,7 +11,10 @@
         1. 插入的节点都是红色的(这样做的好处是【不会增加某一路径的黑色节点数】)
         2. 假设插入后节点为 x, 一直找到root节点或者 x节点的颜色是黑色截止(!= RED) 
         while(x != root && color[x] == RED){
-            s
+            do(recolor or rotation)
+            x = update(x)
         }
+        root.color = black;
+        
 * Sweep Line 算法 扫描线算法的应用(Google Alarm Log,判断点是否被多边形内)
 * SkipList
