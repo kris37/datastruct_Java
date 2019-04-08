@@ -191,7 +191,7 @@ public class IRBTree {
                     node.parent.color = Color.BLACK;
                     parent.parent.color = Color.RED;
                     // case 3
-                    node = rightRotate(parent.parent);
+                   // node = rightRotate(parent.parent);
                 }
 
             }else {
@@ -199,6 +199,6 @@ public class IRBTree {
             }
 
         }
-        return null;
+        return ;
     }
 }
