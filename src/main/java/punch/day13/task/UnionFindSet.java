@@ -21,18 +21,4 @@ public class UnionFindSet {
             roots[i] = i;
         }
     }
-
-    public int findRoot(int v){
-        while (v != roots[v]){
-            v = roots[v];
-        }
-        //
-        while (){
-
-        }
-    }
-
-    public void union (x,y){
-
-    }
 }
