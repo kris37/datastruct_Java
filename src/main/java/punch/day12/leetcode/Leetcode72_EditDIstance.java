@@ -74,4 +74,42 @@ public class Leetcode72_EditDIstance {
 
         return memory[i][j];
     }
+
+
+    /**
+     *  假设所有 nums中元素 <=target
+     * @param nums
+     * @param target
+     */
+    public static boolean selectBackPage(int [] nums,int target,int[] parents){
+
+        boolean[] dp = new boolean[target + 1];
+        dp[0] = true;
+        for (int i = 0; i< nums.length;i++) {
+            if(nums[i] > target) continue;
+            for (int j = dp.length -1; j >= 0; j--) {
+                if(!dp[j] || j + nums[i] > target ) continue;
+                // else
+                dp[j+nums[i]] = true;
+                if(parents[j+nums[i]] < 0){
+                    parents[j+nums[i]] = i;
+                }
+            }
+            dp[nums[i]] = true;
+        }
+        return dp[target];
+    }
+
+    public static void main(String[] args){
+        int[] nums = {3,5,1,4,2,9,7,6,8};
+        int y = 0;
+        for (int i = 10;i < 50;i++) {
+            int[] parents = new int[i+1];
+            Arrays.fill(parents,-1);
+            boolean ok = selectBackPage(nums, i, parents);
+            System.out.println(ok);
+            y++;
+        }
+
+    }
 }
